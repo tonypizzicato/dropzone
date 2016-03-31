@@ -3,5 +3,6 @@ components
 node_modules
 .DS_Store
 .sass-cache
+.idea
 _site
 _config.yaml

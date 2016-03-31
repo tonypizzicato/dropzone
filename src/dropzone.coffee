@@ -1252,9 +1252,13 @@ class Dropzone extends Emitter
   # Called internally when processing is finished.
   # Individual callbacks have to be called in the appropriate sections.
   _finished: (files, responseText, e) ->
-    for file in files
-      file.status = Dropzone.SUCCESS
-      @emit "success", file, responseText, e
+    map =
+      true: Dropzone.SUCCESS
+      false: Dropzone.ERROR
+
+    for own i, file of files
+      file.status = if responseText[i] != undefined then map[responseText[i]] else Dropzone.SUCCESS
+      @emit file.status, file, responseText, e
       @emit "complete", file
     if @options.uploadMultiple
       @emit "successmultiple", files, responseText, e

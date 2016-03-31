@@ -1387,11 +1387,16 @@
     };
 
     Dropzone.prototype._finished = function(files, responseText, e) {
-      var file, _i, _len;
-      for (_i = 0, _len = files.length; _i < _len; _i++) {
-        file = files[_i];
-        file.status = Dropzone.SUCCESS;
-        this.emit("success", file, responseText, e);
+      var file, i, map;
+      map = {
+        "true": Dropzone.SUCCESS,
+        "false": Dropzone.ERROR
+      };
+      for (i in files) {
+        if (!__hasProp.call(files, i)) continue;
+        file = files[i];
+        file.status = responseText[i] !== void 0 ? map[responseText[i]] : Dropzone.SUCCESS;
+        this.emit(file.status, file, responseText, e);
         this.emit("complete", file);
       }
       if (this.options.uploadMultiple) {
